@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Login | SliceHub</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
@@ -12,9 +14,7 @@
 :root {
     --primary: #6366f1;
     --primary-dark: #4f46e5;
-    --secondary: #8b5cf6;
     --dark: #1a1a2e;
-    --light: #ffffff;
     --gray: #6c757d;
     --bg-light: #f8f9ff;
 }
@@ -27,242 +27,40 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: 
-        linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.85) 100%),
-        url('data:image/svg+xml,<svg width="60" height="60" xmlns="http://www.w3.org/2000/svg"><circle cx="30" cy="30" r="3" fill="white" opacity="0.1"/><circle cx="10" cy="50" r="2" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="2" fill="white" opacity="0.1"/></svg>');
+    background: linear-gradient(135deg,#6366f1,#8b5cf6);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
-}
-
-.home-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 24px;
-    text-decoration: none;
-    background: var(--bg-light);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.home-btn:hover {
-    background: var(--primary);
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
 }
 
 .login-container {
-    max-width: 450px;
-    width: 100%;
+    width: 420px;
     background: white;
-    padding: 50px;
+    padding: 45px;
     border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
-    position: relative;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
 }
 
 .login-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .login-header h2 {
-    font-size: 32px;
-    margin-bottom: 10px;
+    font-size: 28px;
     color: var(--dark);
 }
 
 .login-header p {
     color: var(--gray);
-    font-size: 15px;
-}
-
-.form-group {
-    margin-bottom: 25px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 600;
-    color: var(--dark);
     font-size: 14px;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 15px;
-    transition: all 0.3s;
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-}
-
-.form-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    font-size: 14px;
-}
-
-.remember-me {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.remember-me input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-.remember-me label {
-    color: var(--gray);
-    cursor: pointer;
-}
-
-.forgot-password {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.forgot-password:hover {
-    text-decoration: underline;
-}
-
-.btn-login {
-    width: 100%;
-    padding: 15px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.btn-login:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
-}
-
-.divider {
-    text-align: center;
-    margin: 30px 0;
-    position: relative;
-}
-
-.divider::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: #e0e0e0;
-}
-
-.divider span {
-    background: white;
-    padding: 0 15px;
-    position: relative;
-    color: var(--gray);
-    font-size: 14px;
-}
-
-.social-login {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.social-btn {
-    flex: 1;
-    padding: 12px;
-    border: 2px solid #e0e0e0;
-    background: white;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-}
-
-.social-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.social-btn.google {
-    color: #DB4437;
-    border-color: #DB4437;
-}
-
-.social-btn.google:hover {
-    background: #DB4437;
-    color: white;
-}
-
-.social-btn.facebook {
-    color: #1877F2;
-    border-color: #1877F2;
-}
-
-.social-btn.facebook:hover {
-    background: #1877F2;
-    color: white;
-}
-
-.toggle-form {
-    text-align: center;
-    margin-top: 25px;
-}
-
-.toggle-form p {
-    color: var(--gray);
-    font-size: 14px;
-}
-
-.toggle-form a {
-    color: var(--primary);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.toggle-form a:hover {
-    text-decoration: underline;
 }
 
 .error-message {
     background: #ffe5e5;
     color: #ff4444;
-    padding: 12px 15px;
+    padding: 12px;
     border-radius: 10px;
     margin-bottom: 20px;
     font-size: 14px;
@@ -273,16 +71,56 @@ body {
     display: block;
 }
 
-@media (max-width: 768px) {
-    .login-container {
-        padding: 40px 30px;
-    }
-    
-    .form-options {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+    font-size: 15px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+}
+
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background: var(--primary-dark);
+}
+
+.toggle-form {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.toggle-form a {
+    color: var(--primary);
+    font-weight: 600;
+    text-decoration: none;
 }
 </style>
 </head>
@@ -290,71 +128,47 @@ body {
 <body>
 
 <div class="login-container">
-    <a th:href="@{/}" class="home-btn" title="Back to Home">🏠</a>
-    
+
     <div class="login-header">
         <h2>Welcome Back</h2>
         <p>Login to your SliceHub account</p>
     </div>
-    
+
+    <!-- Login Error -->
     <div class="error-message" id="errorMessage">
-        Invalid email or password. Please try again.
+        Invalid email or password
     </div>
-    
-    <form th:action="@{/login}" th:object="${user}" method="post">
+
+    <!-- ✅ SPRING SECURITY LOGIN FORM -->
+    <form th:action="@{/login}" method="post">
+
         <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" th:field="*{name}" placeholder="Enter your full name" required />
+            <label>Email Address</label>
+            <input type="email" name="email"
+                   placeholder="Enter your email" required />
         </div>
-        
+
         <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" th:field="*{email}" placeholder="Enter your email" required />
+            <label>Password</label>
+            <input type="password" name="password"
+                   placeholder="Enter your password" required />
         </div>
-        
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" th:field="*{password}" placeholder="Enter your password" required />
-        </div>
-        
-        <div class="form-options">
-            <div class="remember-me">
-                <input type="checkbox" id="remember" name="remember">
-                <label for="remember">Remember me</label>
-            </div>
-            <a href="#" class="forgot-password">Forgot Password?</a>
-        </div>
-        
+
         <button type="submit" class="btn-login">Login</button>
     </form>
-    
-    <div class="divider">
-        <span>OR</span>
-    </div>
-    
-    <div class="social-login">
-        <button class="social-btn google" onclick="socialLogin('google')">
-            <i class="fab fa-google"></i> Google
-        </button>
-        <button class="social-btn facebook" onclick="socialLogin('facebook')">
-            <i class="fab fa-facebook-f"></i> Facebook
-        </button>
-    </div>
-    
+
     <div class="toggle-form">
-        <p>Don't have an account? <a th:href="@{/register}">Sign up here</a></p>
+        <p>Don't have an account?
+            <a th:href="@{/register}">Register here</a>
+        </p>
     </div>
+
 </div>
 
 <script>
-function socialLogin(provider) {
-    alert(`Social login with ${provider} will be implemented with backend integration.`);
-}
-
-// Show error message if login fails (can be triggered by backend)
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('error')) {
-    document.getElementById('errorMessage').classList.add('show');
+const params = new URLSearchParams(window.location.search);
+if (params.get("error")) {
+    document.getElementById("errorMessage").classList.add("show");
 }
 </script>
 

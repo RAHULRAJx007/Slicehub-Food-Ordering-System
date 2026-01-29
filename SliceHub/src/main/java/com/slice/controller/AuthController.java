@@ -30,10 +30,11 @@ public class AuthController {
     }
 
     @GetMapping("/loginpage")
-    public String showLogin() {
+    public String login(Model model) {
+        model.addAttribute("user", new User());
         return "login";
     }
-    
+
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {
     	
