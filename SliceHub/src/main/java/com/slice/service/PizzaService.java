@@ -6,7 +6,7 @@ import com.slice.model.Pizza;
 
 public interface PizzaService {
 	
-	PizzaService savePizza(Pizza pizza);
+	Pizza savePizza(Pizza pizza);
 	
 	List<Pizza> getAllPizzas();
 	

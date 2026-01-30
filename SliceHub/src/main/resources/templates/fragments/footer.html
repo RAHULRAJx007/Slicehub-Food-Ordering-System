@@ -1,5 +1,243 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+<style>
+/* ================= ENHANCED FOOTER STYLES ================= */
+
+/* Enhanced Footer with Glassmorphism */
+.footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    padding: 60px 30px 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), rgba(139, 92, 246, 0.6), transparent);
+}
+
+.footer::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    bottom: -200px;
+    right: -100px;
+    pointer-events: none;
+}
+
+/* Enhanced Footer Content */
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Enhanced Footer Section */
+.footer-section {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 25px;
+    transition: all 0.4s ease;
+}
+
+.footer-section:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.2);
+}
+
+.footer-section h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-section h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+    transition: width 0.3s;
+}
+
+.footer-section:hover h3::after {
+    width: 100px;
+}
+
+.footer-section p {
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 15px;
+    transition: color 0.3s;
+    line-height: 1.6;
+}
+
+.footer-section:hover p {
+    color: rgba(255,255,255,0.95);
+}
+
+/* Enhanced Footer Links */
+.footer-links {
+    list-style: none;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+    transition: transform 0.3s;
+}
+
+.footer-links li:hover {
+    transform: translateX(10px);
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: none;
+    transition: all 0.3s;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.footer-links a::before {
+    content: '→';
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.3s;
+    font-weight: bold;
+}
+
+.footer-links a:hover::before {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* Social Links Enhancement */
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.social-link {
+    width: 45px;
+    height: 45px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.social-link:hover::before {
+    opacity: 1;
+}
+
+.social-link:hover {
+    transform: translateY(-8px) scale(1.1) rotate(360deg);
+    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+    border-color: transparent;
+}
+
+.social-link i,
+.social-link span {
+    position: relative;
+    z-index: 1;
+}
+
+/* Enhanced Footer Bottom */
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.7);
+    position: relative;
+    z-index: 1;
+}
+
+.footer-bottom::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.8), transparent);
+}
+
+.footer-bottom p {
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.footer-bottom:hover p {
+    color: rgba(255,255,255,0.9);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-section {
+        padding: 20px;
+    }
+}
+</style>
+</head>
 <body>
 
 <th:block th:fragment="sitefooter">
@@ -18,6 +256,7 @@
                 <li><a href="/about">About</a></li>
                 <li><a href="/contact">Contact</a></li>
             </ul>
+        </ul>
         </div>
     </div>
 

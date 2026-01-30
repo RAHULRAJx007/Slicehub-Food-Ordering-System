@@ -29,9 +29,8 @@ public class AuthController {
         return "register";
     }
 
-    @GetMapping("/loginpage")
-    public String login(Model model) {
-        model.addAttribute("user", new User());
+    @GetMapping("/login")
+    public String login() {
         return "login";
     }
 
