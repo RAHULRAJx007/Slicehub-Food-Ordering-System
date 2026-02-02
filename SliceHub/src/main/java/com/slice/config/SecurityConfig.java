@@ -75,16 +75,6 @@ public SecurityFilterChain filterChain(
     return http.build();
 }
 
-
-    // 🔥 EXPLICIT AuthenticationManager
-    @Bean
-    public AuthenticationManager authenticationManager(
-            DaoAuthenticationProvider authenticationProvider) {
-
-        return new ProviderManager(authenticationProvider);
-    }
-
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider(
             CustomUserDetailsService userDetailsService,

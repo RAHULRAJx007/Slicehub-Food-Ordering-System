@@ -1,25 +1,27 @@
 package com.slice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.authentication.UserServiceBeanDefinitionParser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import com.slice.model.User;
+import com.slice.service.PizzaService;
 import com.slice.service.UserService;
 
 @Controller
 public class AuthController {
-	
-	@Autowired
-	private UserService userService;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PizzaService pizzaService;   // ✅ INJECT SERVICE
+
+    // ✅ HOME PAGE – LOAD PIZZAS FROM DB
     @GetMapping("/")
-    public String home() {
+    public String home(Model model) {
+        model.addAttribute("pizzas", pizzaService.getAvailablePizzas());
         return "index";
     }
 
@@ -34,25 +36,26 @@ public class AuthController {
         return "login";
     }
 
+    @GetMapping("/aboutpage")
+    public String aboutpage() {
+        return "about";
+    }
+
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user, Model model) {
-    	
-    	userService.registerCustomer(user);
-    	
-    	model.addAttribute("message", "Verification Link sent to your Email.");
-    	return "login";
+        userService.registerCustomer(user);
+        model.addAttribute("message", "Verification Link sent to your Email.");
+        return "login";
     }
-    
-    @GetMapping("Verify")
+
+    @GetMapping("/Verify")
     public String verifyUser(@RequestParam("token") String token, Model model) {
-    	
-    	try {
-    		userService.verifyUser(token);
-    		model.addAttribute("message", "Account verified successfully. you can login now!");
-    	} catch (Exception e) {
-    		model.addAttribute("error", e.getMessage());
-    	}
-    	
-    	return "login";
+        try {
+            userService.verifyUser(token);
+            model.addAttribute("message", "Account verified successfully. You can login now!");
+        } catch (Exception e) {
+            model.addAttribute("error", e.getMessage());
+        }
+        return "login";
     }
 }

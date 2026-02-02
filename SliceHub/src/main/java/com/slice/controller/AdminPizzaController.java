@@ -8,12 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.slice.model.Pizza;
@@ -26,13 +21,15 @@ public class AdminPizzaController {
     @Autowired
     private PizzaService pizzaService;
 
+    // ✅ LIST PIZZAS (ADMIN DASHBOARD)
     @GetMapping
     public String listPizzas(Model model) {
+
         List<Pizza> pizzas = pizzaService.getAllPizzas();
 
         long availableCount = pizzas.stream()
-                                     .filter(Pizza::isAvailable)
-                                     .count();
+                                    .filter(Pizza::isAvailable)
+                                    .count();
 
         long unavailableCount = pizzas.size() - availableCount;
 
@@ -40,41 +37,41 @@ public class AdminPizzaController {
         model.addAttribute("availableCount", availableCount);
         model.addAttribute("unavailableCount", unavailableCount);
 
-        return "admin-pizzas";
+        // 🔥 MUST MATCH templates/admin/pizzas.html
+        return "admin/pizzas";
     }
 
-
-    // Show add form
+    // ✅ SHOW ADD FORM
     @GetMapping("/add")
     public String showAddForm(Model model) {
         model.addAttribute("pizza", new Pizza());
-        return "pizza-form";
+        return "admin/addingpizza";
     }
 
-    // Save pizza
+    // ✅ SAVE / UPDATE PIZZA
     @PostMapping("/save")
     public String savePizza(
-            @ModelAttribute("pizza") Pizza pizza,
+            @ModelAttribute Pizza pizza,
             @RequestParam("imageFile") MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
 
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-
             Path uploadPath = Paths.get("uploads");
 
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
             }
 
-            Files.copy(file.getInputStream(),
-                       uploadPath.resolve(fileName),
-                       StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(
+                file.getInputStream(),
+                uploadPath.resolve(fileName),
+                StandardCopyOption.REPLACE_EXISTING
+            );
 
             pizza.setImageName(fileName);
-        }
-        else if (pizza.getId() != null) {
 
+        } else if (pizza.getId() != null) {
             Pizza existing = pizzaService.getPizzaById(pizza.getId());
             pizza.setImageName(existing.getImageName());
         }
@@ -83,15 +80,14 @@ public class AdminPizzaController {
         return "redirect:/admin/pizzas";
     }
 
-
-    // Show edit form
+    // ✅ EDIT FORM
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Long id, Model model) {
         model.addAttribute("pizza", pizzaService.getPizzaById(id));
-        return "pizza-form";
+        return "admin/pizza-form";
     }
 
-    // Delete pizza
+    // ✅ DELETE
     @GetMapping("/delete/{id}")
     public String deletePizza(@PathVariable Long id) {
         pizzaService.deletePizza(id);

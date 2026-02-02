@@ -88,11 +88,45 @@ body {
     border-radius: 10px;
     border: 2px solid #e0e0e0;
     font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s;
 }
 
 .form-group input:focus {
     outline: none;
     border-color: var(--primary);
+}
+
+/* ===== PASSWORD WRAPPER ===== */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper input {
+    padding-right: 50px;
+}
+
+.eye-btn {
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--gray);
+    font-size: 18px;
+    transition: all 0.3s;
+    padding: 5px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.eye-btn:hover {
+    color: var(--primary);
+    background: rgba(99, 102, 241, 0.08);
 }
 
 .btn-login {
@@ -144,14 +178,19 @@ body {
 
         <div class="form-group">
             <label>Email Address</label>
-            <input type="email" name="email"
+            <input type="email" name="username"
                    placeholder="Enter your email" required />
         </div>
 
         <div class="form-group">
             <label>Password</label>
-            <input type="password" name="password"
-                   placeholder="Enter your password" required />
+            <div class="password-wrapper">
+                <input type="password" name="password" id="passwordInput"
+                       placeholder="Enter your password" required />
+                <button type="button" class="eye-btn" onclick="togglePassword()">
+                    <i class="fas fa-eye" id="eyeIcon"></i>
+                </button>
+            </div>
         </div>
 
         <button type="submit" class="btn-login">Login</button>
@@ -169,6 +208,19 @@ body {
 const params = new URLSearchParams(window.location.search);
 if (params.get("error")) {
     document.getElementById("errorMessage").classList.add("show");
+}
+
+function togglePassword() {
+    const input = document.getElementById('passwordInput');
+    const icon = document.getElementById('eyeIcon');
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
 }
 </script>
 

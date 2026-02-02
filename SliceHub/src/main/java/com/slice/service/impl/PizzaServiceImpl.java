@@ -26,8 +26,14 @@ public class PizzaServiceImpl implements PizzaService {
     }
 
     @Override
+    public List<Pizza> getAvailablePizzas() {
+        return pizzaRepository.findByAvailableTrue();
+    }
+
+    @Override
     public Pizza getPizzaById(Long id) {
-        return pizzaRepository.findById(id).orElse(null);
+        return pizzaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pizza not found"));
     }
 
     @Override

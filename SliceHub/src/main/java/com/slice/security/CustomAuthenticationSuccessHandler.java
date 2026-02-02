@@ -23,30 +23,33 @@ public class CustomAuthenticationSuccessHandler
             Authentication authentication)
             throws IOException, ServletException {
 
-        Collection<? extends GrantedAuthority> authorities =
-                authentication.getAuthorities();
+        // 🔍 DEBUG (KEEP FOR NOW)
+        authentication.getAuthorities()
+            .forEach(a -> System.out.println("LOGIN ROLE = " + a.getAuthority()));
 
-        for (GrantedAuthority authority : authorities) {
+        String contextPath = request.getContextPath(); // safety
+
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
 
             String role = authority.getAuthority();
 
-            if ("ROLE_ADMIN".equals(role)) {
-                response.sendRedirect("/admin/pizzas");
-                return;
-            }
+            switch (role) {
 
-            if ("ROLE_STAFF".equals(role)) {
-                response.sendRedirect("/staff/dashboard");
-                return;
-            }
+                case "ROLE_ADMIN":
+                    response.sendRedirect(contextPath + "/admin/pizzas");
+                    return;
 
-            if ("ROLE_CUSTOMER".equals(role)) {
-                response.sendRedirect("/menu");
-                return;
+                case "ROLE_STAFF":
+                    response.sendRedirect(contextPath + "/staff/dashboard");
+                    return;
+
+                case "ROLE_CUSTOMER":
+                    response.sendRedirect(contextPath + "/menu");
+                    return;
             }
         }
 
-        // Safe fallback
-        response.sendRedirect("/");
+        // ✅ fallback (should never happen)
+        response.sendRedirect(contextPath + "/");
     }
 }

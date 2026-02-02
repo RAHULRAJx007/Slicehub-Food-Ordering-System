@@ -273,6 +273,34 @@
         </div>
     </section>
 
+		<section class="section">
+    <div class="section-header">
+        <h2>Popular Pizzas</h2>
+        <p>Freshly prepared & loved by everyone</p>
+    </div>
+
+    <div class="pizza-grid">
+
+        <div class="pizza-card"
+             th:each="pizza : ${pizzas}"
+             th:if="${pizza.available}">
+
+            <div class="pizza-image-container">
+                <img class="pizza-img"
+                     th:src="@{/uploads/{img}(img=${pizza.imageName})}"
+                     alt="Pizza">
+            </div>
+
+            <div class="pizza-content">
+                <h3 th:text="${pizza.name}">Pizza</h3>
+                <p th:text="${pizza.description}"></p>
+                <strong>₹<span th:text="${pizza.price}">0</span></strong>
+            </div>
+        </div>
+
+    	</div>
+	</section>
+		
     <!-- FEATURES -->
     <section class="section">
         <div class="section-header">
