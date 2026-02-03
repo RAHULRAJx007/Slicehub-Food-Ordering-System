@@ -7,5 +7,4 @@ public interface UserService {
 	User registerCustomer(User user);
 	User findByEmail(String email);
 	boolean verifyUser(String token);
-
 }

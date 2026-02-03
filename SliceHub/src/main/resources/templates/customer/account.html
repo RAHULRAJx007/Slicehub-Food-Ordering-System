@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Account | SliceHub</title>
+
+<link rel="stylesheet" th:href="@{/css/common.css}">
+<!-- Font Awesome Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<style>
+/* ================= ACCOUNT HERO SECTION ================= */
+.account-hero {
+    margin-top: 80px;
+    min-height: 40vh;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.95), rgba(139, 92, 246, 0.9)),
+                url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1200') center/cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.account-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="2" fill="white" opacity="0.1"/></svg>');
+    animation: float 20s linear infinite;
+}
+
+.account-hero::after {
+    content: '';
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px;
+    right: -100px;
+    animation: floatOrb 15s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-100px); }
+}
+
+@keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-50px, 50px) scale(1.1); }
+    66% { transform: translate(30px, -30px) scale(0.9); }
+}
+
+.account-hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 40px;
+}
+
+.account-hero-content h1 {
+    font-size: 48px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.account-hero-content p {
+    font-size: 18px;
+    opacity: 0.95;
+}
+
+/* ================= ACCOUNT CONTAINER ================= */
+.account-container {
+    max-width: 1200px;
+    margin: -60px auto 0;
+    padding: 0 30px 100px;
+    position: relative;
+    z-index: 10;
+}
+
+/* ================= PROFILE CARD ================= */
+.profile-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 40px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 40px;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.profile-card:hover {
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.15);
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    flex-shrink: 0;
+}
+
+/* Ensure Font Awesome icons display properly */
+.profile-avatar i,
+.tab-btn i,
+.btn-primary i,
+.info-card h3 i,
+.empty-state i {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+}
+
+.profile-info h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+}
+
+.profile-info > p {
+    color: var(--gray);
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+    padding-top: 25px;
+    border-top: 2px solid #f0f0f0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 13px;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* ================= TABS ================= */
+.account-tabs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 40px;
+    background: white;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 150px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--gray);
+    background: transparent;
+    border: none;
+    padding: 15px 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tab-btn i {
+    font-size: 16px;
+}
+
+.tab-btn:hover {
+    background: rgba(99, 102, 241, 0.05);
+    color: var(--primary);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+}
+
+/* ================= TAB CONTENT ================= */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.4s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ================= EMPTY STATE ================= */
+.empty-state {
+    text-align: center;
+    padding: 80px 40px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state i {
+    font-size: 60px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.empty-state h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 12px;
+}
+
+.empty-state p {
+    color: var(--gray);
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 35px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+}
+
+/* ================= PERSONAL INFO ================= */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.info-card {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.15);
+}
+
+.info-card h3 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-card h3 i {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 22px;
+}
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--dark);
+    background: #f8f9fa;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.form-group input::placeholder {
+    color: #adb5bd;
+}
+
+.btn-save {
+    width: 100%;
+    padding: 16px 28px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+}
+
+/* ================= SETTINGS ================= */
+.settings-list {
+    background: white;
+    border-radius: 20px;
+    padding: 35px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 0;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-info h4 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 5px;
+}
+
+.setting-info p {
+    color: var(--gray);
+    font-size: 14px;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    width: 60px;
+    height: 32px;
+    background: #e9ecef;
+    border-radius: 16px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.toggle-switch::before {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch.active {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.toggle-switch.active::before {
+    transform: translateX(28px);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1024px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .account-hero {
+        min-height: 30vh;
+    }
+    
+    .account-hero-content h1 {
+        font-size: 36px;
+    }
+    
+    .account-container {
+        padding: 0 20px 80px;
+        margin-top: -40px;
+    }
+    
+    .profile-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 25px;
+        padding: 30px;
+    }
+    
+    .profile-avatar {
+        margin: 0 auto;
+    }
+    
+    .profile-stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .account-tabs {
+        flex-direction: column;
+    }
+    
+    .tab-btn {
+        min-width: 100%;
+    }
+    
+    .info-card {
+        padding: 25px;
+    }
+    
+    .settings-list {
+        padding: 25px;
+    }
+    
+    .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .toggle-switch {
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .account-hero-content h1 {
+        font-size: 28px;
+    }
+    
+    .empty-state {
+        padding: 50px 20px;
+    }
+}
+
+/* ================= ACCESSIBILITY ================= */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+.tab-btn:focus-visible,
+.btn-primary:focus-visible,
+.btn-save:focus-visible {
+    outline: 3px solid var(--secondary);
+    outline-offset: 3px;
+}
+
+.form-group input:focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.toggle-switch:focus-visible {
+    outline: 3px solid var(--secondary);
+    outline-offset: 3px;
+}
+</style>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<!-- ACCOUNT HERO -->
+<section class="account-hero">
+    <div class="account-hero-content">
+        <h1>My Account</h1>
+        <p>Manage your profile, orders, and settings</p>
+    </div>
+</section>
+
+<!-- ACCOUNT CONTAINER -->
+<div class="account-container">
+
+    <!-- PROFILE CARD -->
+    <div class="profile-card">
+        <div class="profile-avatar">
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="profile-info">
+            <h2 th:text="${user.name}">John Doe</h2>
+            <p th:text="${user.email}">john@example.com</p>
+
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Total Orders</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">0</div>
+                    <div class="stat-label">Points</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">2026</div>
+                    <div class="stat-label">Member Since</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TABS -->
+    <div class="account-tabs">
+        <button class="tab-btn active" onclick="switchTab(event,'orders')" aria-label="View my orders">
+            <i class="fas fa-shopping-bag"></i> <span>My Orders</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab(event,'info')" aria-label="View personal information">
+            <i class="fas fa-user-circle"></i> <span>Personal Info</span>
+        </button>
+        <button class="tab-btn" onclick="switchTab(event,'settings')" aria-label="View settings">
+            <i class="fas fa-cog"></i> <span>Settings</span>
+        </button>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div class="tab-content active" id="orders">
+        <div class="empty-state">
+            <i class="fas fa-shopping-bag"></i>
+            <h3>No Orders Yet</h3>
+            <p>Start ordering delicious pizzas now!</p>
+            <a th:href="@{/menu}" class="btn-primary">
+                <i class="fas fa-pizza-slice"></i> <span>Browse Menu</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- PERSONAL INFO TAB -->
+    <div class="tab-content" id="info">
+        <form th:action="@{/profile/update}" method="post">
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <h3><i class="fas fa-user"></i> Basic Info</h3>
+
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name"
+                               th:value="${user.name}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email"
+                               th:value="${user.email}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone"
+                               placeholder="+91 98765 43210">
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <h3><i class="fas fa-map-marker-alt"></i> Address</h3>
+
+                    <div class="form-group">
+                        <label for="address">Street Address</label>
+                        <input type="text" id="address" name="address"
+                               placeholder="123 Main Street">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city"
+                               placeholder="Your City">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postal">Postal Code</label>
+                        <input type="text" id="postal" name="postal"
+                               placeholder="110001">
+                    </div>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 30px; max-width: 320px;">
+                <button type="submit" class="btn-save">
+                    <i class="fas fa-save"></i> <span>Save Changes</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-content" id="settings">
+        <div class="settings-list">
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h4>Email Notifications</h4>
+                    <p>Receive order updates via email</p>
+                </div>
+                <div class="toggle-switch active" role="switch" aria-checked="true" tabindex="0" onclick="toggleSwitch(this)" onkeypress="if(event.key==='Enter') toggleSwitch(this)"></div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h4>SMS Notifications</h4>
+                    <p>Get text messages for order status</p>
+                </div>
+                <div class="toggle-switch active" role="switch" aria-checked="true" tabindex="0" onclick="toggleSwitch(this)" onkeypress="if(event.key==='Enter') toggleSwitch(this)"></div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h4>Marketing Emails</h4>
+                    <p>Receive special offers and promotions</p>
+                </div>
+                <div class="toggle-switch" role="switch" aria-checked="false" tabindex="0" onclick="toggleSwitch(this)" onkeypress="if(event.key==='Enter') toggleSwitch(this)"></div>
+            </div>
+
+            <div class="setting-item">
+                <div class="setting-info">
+                    <h4>Save Payment Methods</h4>
+                    <p>Securely store cards for faster checkout</p>
+                </div>
+                <div class="toggle-switch active" role="switch" aria-checked="true" tabindex="0" onclick="toggleSwitch(this)" onkeypress="if(event.key==='Enter') toggleSwitch(this)"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; max-width: 320px;">
+            <a th:href="@{/profile/change-password}"
+               class="btn-primary" style="width:100%;justify-content:center;">
+                <i class="fas fa-key"></i> <span>Change Password</span>
+            </a>
+        </div>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: sitefooter}"></div>
+
+<script>
+// Check if Font Awesome loaded, if not use emoji fallbacks
+window.addEventListener('DOMContentLoaded', function() {
+    // Test if Font Awesome is loaded
+    const testIcon = document.createElement('i');
+    testIcon.className = 'fas fa-user';
+    testIcon.style.position = 'absolute';
+    testIcon.style.left = '-9999px';
+    document.body.appendChild(testIcon);
+    
+    const computedStyle = window.getComputedStyle(testIcon, ':before');
+    const content = computedStyle.getPropertyValue('content');
+    
+    // If Font Awesome didn't load, use emoji fallbacks
+    if (!content || content === 'none' || content === '""') {
+        console.log('Font Awesome not loaded, using emoji fallbacks');
+        
+        // Replace icons with emojis
+        const iconMap = {
+            'fa-user': '👤',
+            'fa-shopping-bag': '🛍️',
+            'fa-user-circle': '👤',
+            'fa-cog': '⚙️',
+            'fa-pizza-slice': '🍕',
+            'fa-map-marker-alt': '📍',
+            'fa-save': '💾',
+            'fa-key': '🔑'
+        };
+        
+        document.querySelectorAll('i[class*="fa-"]').forEach(icon => {
+            const classes = icon.className.split(' ');
+            for (let cls of classes) {
+                if (iconMap[cls]) {
+                    icon.textContent = iconMap[cls];
+                    icon.style.fontFamily = 'inherit';
+                    break;
+                }
+            }
+        });
+    }
+    
+    document.body.removeChild(testIcon);
+});
+
+// Tab switching
+function switchTab(event, tabName) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    event.currentTarget.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+    document.querySelectorAll('.tab-btn').forEach(b => b.setAttribute('aria-selected', 'false'));
+    event.currentTarget.setAttribute('aria-selected', 'true');
+}
+
+// Toggle switch
+function toggleSwitch(element) {
+    element.classList.toggle('active');
+    const isActive = element.classList.contains('active');
+    element.setAttribute('aria-checked', isActive);
+}
+
+// Initialize ARIA
+document.querySelectorAll('.tab-btn').forEach((btn, index) => {
+    btn.setAttribute('role', 'tab');
+    btn.setAttribute('aria-selected', index === 0 ? 'true' : 'false');
+});
+
+// Mobile menu toggle
+function toggleMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        navLinks.classList.toggle('active');
+    }
+}
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+});
+</script>
+
+</body>
+</html>

@@ -47,6 +47,7 @@ public SecurityFilterChain filterChain(
 
             .requestMatchers("/admin/**").hasRole("ADMIN")
             .requestMatchers("/staff/**").hasRole("STAFF")
+            .requestMatchers("/account/**").hasRole("CUSTOMER")
 
             .anyRequest().authenticated()
         )

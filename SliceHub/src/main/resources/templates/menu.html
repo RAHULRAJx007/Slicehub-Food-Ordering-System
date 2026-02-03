@@ -5,15 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Menu | SliceHub</title>
 
-<!-- SAME CSS AS ABOUT -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
 <link rel="stylesheet" th:href="@{/css/common.css}">
 
 <style>
-/* Menu-specific ONLY */
 .menu-section {
     padding: 100px 30px;
     max-width: 1400px;
-    margin: 0 auto;
+    margin: auto;
 }
 
 .menu-header {
@@ -24,85 +25,247 @@
 .menu-header h2 {
     font-size: 48px;
     font-weight: 700;
-    color: var(--dark);
 }
 
 .menu-header p {
-    font-size: 18px;
     color: var(--gray);
+    font-size: 18px;
 }
 
 .menu-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 30px;
 }
 
 .menu-card {
     background: white;
-    border-radius: 18px;
+    border-radius: 22px;
     overflow: hidden;
-    box-shadow: var(--shadow-md);
-    transition: transform .3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
 }
 
-.menu-card:hover {
-    transform: translateY(-8px);
+.menu-card-image {
+    height: 220px;
+    position: relative;
 }
 
-.menu-card img {
+.menu-card-image img {
     width: 100%;
-    height: 200px;
+    height: 100%;
     object-fit: cover;
 }
 
+.badge {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    color: white;
+}
+
+.badge.available {
+    background: #10b981;
+}
+
+.badge.sold {
+    background: #ef4444;
+}
+
 .menu-card-body {
-    padding: 20px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .menu-card-body h3 {
-    margin: 0 0 10px;
+    font-size: 22px;
+    margin-bottom: 10px;
 }
 
-.menu-price {
-    font-weight: 700;
+.menu-card-body p {
+    color: var(--gray);
+    font-size: 14px;
+    flex: 1;
+}
+
+.price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+    margin: 16px 0;
+}
+
+.price-row span {
+    font-size: 28px;
+    font-weight: 800;
     color: var(--primary);
+}
+
+.action-row {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-cart {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+}
+
+.btn-buy {
+    background: white;
+    color: var(--primary);
+    border: 2px solid var(--primary);
+}
+
+.btn-disabled {
+    background: #e5e7eb;
+    color: #6b7280;
+    cursor: not-allowed;
+}
+
+.toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #10b981;
+    color: white;
+    padding: 16px 22px;
+    border-radius: 12px;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    z-index: 9999;
+}
+.toast.show {
+    display: flex;
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER (SAME AS ABOUT) -->
 <div th:replace="~{fragments/header :: siteHeader}"></div>
-
-<!-- OFFSET SAME AS ABOUT -->
-<div style="margin-top: 80px;">
 
 <section class="menu-section">
 
     <div class="menu-header">
         <h2>Our Menu</h2>
-        <p>Freshly baked pizzas just for you 🍕</p>
+        <p>Freshly baked pizzas 🍕</p>
     </div>
 
     <div class="menu-grid">
+
         <div class="menu-card" th:each="pizza : ${pizzas}">
-            <img th:src="@{'/uploads/' + ${pizza.imageName}}">
+
+            <div class="menu-card-image">
+                <img th:src="@{'/uploads/' + ${pizza.imageName}}" th:alt="${pizza.name}">
+                <span th:if="${pizza.available}" class="badge available">Available</span>
+                <span th:unless="${pizza.available}" class="badge sold">Sold Out</span>
+            </div>
+
             <div class="menu-card-body">
-                <h3 th:text="${pizza.name}"></h3>
-                <p th:text="${pizza.description}"></p>
-                <p class="menu-price">₹<span th:text="${pizza.price}"></span></p>
+                <h3 th:text="${pizza.name}">Pizza</h3>
+                <p th:text="${pizza.description}">Description</p>
+
+                <div class="price-row">
+                    ₹<span th:text="${pizza.price}">0</span>
+                </div>
+
+                <div class="action-row" th:if="${pizza.available}">
+                    <button class="btn btn-cart"
+                            th:data-id="${pizza.id}"
+                            th:data-name="${pizza.name}"
+                            th:data-price="${pizza.price}"
+                            onclick="addToCart(this)">
+                        <i class="fas fa-shopping-cart"></i> Add to Cart
+                    </button>
+
+                    <button class="btn btn-buy"
+                            th:data-id="${pizza.id}"
+                            th:data-name="${pizza.name}"
+                            th:data-price="${pizza.price}"
+                            onclick="buyNow(this)">
+                        <i class="fas fa-bolt"></i> Buy Now
+                    </button>
+                </div>
+
+                <div class="action-row" th:unless="${pizza.available}">
+                    <button class="btn btn-disabled" disabled>
+                        Unavailable
+                    </button>
+                </div>
+
             </div>
         </div>
+
     </div>
 
 </section>
 
+<div th:replace="~{fragments/footer :: sitefooter}"></div>
+
+<div id="toast" class="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText"></span>
 </div>
 
-<!-- FOOTER (SAME AS ABOUT) -->
-<div th:replace="~{fragments/footer :: sitefooter}"></div>
+<script>
+function getCart() {
+    return JSON.parse(localStorage.getItem("cart") || "[]");
+}
+
+function saveCart(cart) {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function addToCart(btn) {
+    const id = Number(btn.dataset.id);
+    const name = btn.dataset.name;
+    const price = Number(btn.dataset.price);
+
+    const cart = getCart();
+    const item = cart.find(i => i.id === id);
+
+    if (item) item.qty++;
+    else cart.push({ id, name, price, qty: 1 });
+
+    saveCart(cart);
+    showToast(name + " added to cart");
+}
+
+function buyNow(btn) {
+    addToCart(btn);
+    window.location.href = "/cart";
+}
+
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    document.getElementById("toastText").innerText = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 3000);
+}
+</script>
 
 </body>
 </html>
