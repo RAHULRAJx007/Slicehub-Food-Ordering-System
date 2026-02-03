@@ -51,11 +51,10 @@ public class AdminPizzaController {
     // ✅ SAVE / UPDATE PIZZA
     @PostMapping("/save")
     public String savePizza(
-            @ModelAttribute Pizza pizza,
-            @RequestParam("imageFile") MultipartFile file) throws IOException {
+            @ModelAttribute("pizza") Pizza pizza,
+            @RequestParam("image") MultipartFile file) throws IOException {
 
         if (!file.isEmpty()) {
-
             String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
             Path uploadPath = Paths.get("uploads");
 
@@ -63,15 +62,13 @@ public class AdminPizzaController {
                 Files.createDirectories(uploadPath);
             }
 
-            Files.copy(
-                file.getInputStream(),
-                uploadPath.resolve(fileName),
-                StandardCopyOption.REPLACE_EXISTING
-            );
+            Files.copy(file.getInputStream(),
+                    uploadPath.resolve(fileName),
+                    StandardCopyOption.REPLACE_EXISTING);
 
             pizza.setImageName(fileName);
-
         } else if (pizza.getId() != null) {
+            // 🔥 KEEP OLD IMAGE DURING EDIT
             Pizza existing = pizzaService.getPizzaById(pizza.getId());
             pizza.setImageName(existing.getImageName());
         }
@@ -80,12 +77,15 @@ public class AdminPizzaController {
         return "redirect:/admin/pizzas";
     }
 
+
     // ✅ EDIT FORM
     @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Long id, Model model) {
-        model.addAttribute("pizza", pizzaService.getPizzaById(id));
-        return "admin/pizza-form";
+    public String editPizza(@PathVariable Long id, Model model) {
+        Pizza pizza = pizzaService.getPizzaById(id);
+        model.addAttribute("pizza", pizza);
+        return "admin/addingpizza"; // 🔥 SAME PAGE
     }
+
 
     // ✅ DELETE
     @GetMapping("/delete/{id}")

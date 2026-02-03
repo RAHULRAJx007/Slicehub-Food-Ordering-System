@@ -1,38 +1,77 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 /* ================= ENHANCED FOOTER STYLES ================= */
 
-/* Enhanced Footer with Glassmorphism */
+/* Enhanced Footer with Glassmorphism & Animations */
 .footer {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    background: 
+        linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%),
+        radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.08) 0%, transparent 50%);
     color: white;
-    padding: 60px 30px 30px;
+    padding: 80px 30px 30px;
     position: relative;
     overflow: hidden;
 }
 
+/* Animated gradient line on top */
 .footer::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.6), rgba(139, 92, 246, 0.6), transparent);
+    height: 3px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(99, 102, 241, 0.8), 
+        rgba(139, 92, 246, 0.8), 
+        rgba(236, 72, 153, 0.8), 
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: gradientSlide 3s ease-in-out infinite;
 }
 
+@keyframes gradientSlide {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Floating orb 1 */
 .footer::after {
     content: '';
     position: absolute;
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
     border-radius: 50%;
-    bottom: -200px;
-    right: -100px;
+    bottom: -250px;
+    right: -150px;
     pointer-events: none;
+    animation: floatOrb 20s ease-in-out infinite;
+}
+
+/* Floating orb 2 */
+.footer-content::before {
+    content: '';
+    position: absolute;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(236, 72, 153, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    top: -100px;
+    left: -100px;
+    pointer-events: none;
+    animation: floatOrb 15s ease-in-out infinite reverse;
+}
+
+@keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
 }
 
 /* Enhanced Footer Content */
@@ -40,9 +79,9 @@
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 40px;
-    margin-bottom: 40px;
+    margin-bottom: 50px;
     position: relative;
     z-index: 1;
 }
@@ -50,89 +89,129 @@
 /* Enhanced Footer Section */
 .footer-section {
     background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 25px;
-    transition: all 0.4s ease;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 25px;
+    padding: 30px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Glow effect on hover */
+.footer-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.footer-section:hover::before {
+    opacity: 1;
+    animation: rotateGlow 3s linear infinite;
+}
+
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .footer-section:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(99, 102, 241, 0.3);
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.2);
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(99, 102, 241, 0.4);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 
+        0 20px 60px rgba(99, 102, 241, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .footer-section h3 {
-    font-size: 22px;
-    margin-bottom: 20px;
+    font-size: 24px;
+    margin-bottom: 25px;
     background: linear-gradient(135deg, #6366f1, #8b5cf6, #ec4899);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     font-weight: 700;
     position: relative;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
 }
 
+/* Animated underline */
 .footer-section h3::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
-    width: 50px;
-    height: 3px;
+    width: 60px;
+    height: 4px;
     background: linear-gradient(90deg, var(--primary), var(--secondary));
     border-radius: 2px;
-    transition: width 0.3s;
+    transition: width 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.5);
 }
 
 .footer-section:hover h3::after {
-    width: 100px;
+    width: 120px;
 }
 
 .footer-section p {
     color: rgba(255,255,255,0.7);
     margin-bottom: 15px;
-    transition: color 0.3s;
-    line-height: 1.6;
+    transition: all 0.3s;
+    line-height: 1.8;
+    font-size: 15px;
 }
 
 .footer-section:hover p {
     color: rgba(255,255,255,0.95);
+    letter-spacing: 0.3px;
 }
 
 /* Enhanced Footer Links */
 .footer-links {
     list-style: none;
+    padding: 0;
 }
 
 .footer-links li {
-    margin-bottom: 12px;
-    transition: transform 0.3s;
+    margin-bottom: 15px;
+    transition: all 0.3s;
 }
 
 .footer-links li:hover {
-    transform: translateX(10px);
+    transform: translateX(15px);
 }
 
 .footer-links a {
     color: rgba(255,255,255,0.7);
     text-decoration: none;
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 15px;
 }
 
+/* Animated arrow */
 .footer-links a::before {
     content: '→';
     opacity: 0;
-    transform: translateX(-10px);
-    transition: all 0.3s;
+    transform: translateX(-15px);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     font-weight: bold;
+    color: var(--primary);
 }
 
 .footer-links a:hover::before {
@@ -140,53 +219,101 @@
     transform: translateX(0);
 }
 
+/* Background glow on hover */
+.footer-links a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
+}
+
+.footer-links a:hover::after {
+    opacity: 1;
+}
+
 .footer-links a:hover {
     color: var(--primary);
-    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    text-shadow: 0 0 15px rgba(99, 102, 241, 0.6);
+    transform: scale(1.05);
 }
 
 /* Social Links Enhancement */
 .social-links {
     display: flex;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 25px;
+    flex-wrap: wrap;
 }
 
 .social-link {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     background: rgba(255,255,255,0.05);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.15);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
     text-decoration: none;
-    font-size: 18px;
-    transition: all 0.4s ease;
+    font-size: 20px;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     position: relative;
     overflow: hidden;
 }
 
+/* Gradient fill effect */
 .social-link::before {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: -2px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.4s;
+    z-index: -1;
 }
 
 .social-link:hover::before {
     opacity: 1;
 }
 
+/* Ripple effect */
+.social-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    opacity: 0;
+    animation: ripple 1.5s infinite;
+}
+
+.social-link:hover::after {
+    animation: ripple 1s infinite;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
 .social-link:hover {
-    transform: translateY(-8px) scale(1.1) rotate(360deg);
-    box-shadow: 0 15px 35px rgba(99, 102, 241, 0.5);
+    transform: translateY(-12px) scale(1.15) rotate(360deg);
+    box-shadow: 
+        0 20px 40px rgba(99, 102, 241, 0.6),
+        0 0 30px rgba(139, 92, 246, 0.4);
     border-color: transparent;
 }
 
@@ -194,48 +321,143 @@
 .social-link span {
     position: relative;
     z-index: 1;
+    transition: transform 0.3s;
+}
+
+.social-link:hover i,
+.social-link:hover span {
+    transform: scale(1.2);
 }
 
 /* Enhanced Footer Bottom */
 .footer-bottom {
     text-align: center;
-    padding-top: 30px;
-    border-top: 1px solid rgba(255,255,255,0.1);
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.08);
     color: rgba(255,255,255,0.7);
     position: relative;
     z-index: 1;
 }
 
+/* Animated gradient line */
 .footer-bottom::before {
     content: '';
     position: absolute;
     top: 0;
     left: 50%;
     transform: translateX(-50%);
-    width: 100px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.8), transparent);
+    width: 150px;
+    height: 2px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(99, 102, 241, 0.8), 
+        rgba(139, 92, 246, 0.8),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: gradientSlide 2s ease-in-out infinite;
+    filter: blur(1px);
 }
 
 .footer-bottom p {
-    font-size: 14px;
-    transition: color 0.3s;
+    font-size: 15px;
+    transition: all 0.3s;
+    padding: 10px 20px;
+    border-radius: 8px;
+    display: inline-block;
 }
 
 .footer-bottom:hover p {
-    color: rgba(255,255,255,0.9);
+    color: rgba(255,255,255,1);
+    background: rgba(99, 102, 241, 0.1);
+    transform: scale(1.05);
+}
+
+/* Newsletter Section (if you want to add later) */
+.newsletter-section {
+    background: rgba(99, 102, 241, 0.1);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+}
+
+.newsletter-section input {
+    width: 100%;
+    padding: 12px 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 12px;
+    transition: all 0.3s;
+}
+
+.newsletter-section input:focus {
+    outline: none;
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.newsletter-section input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.newsletter-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    border-radius: 10px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.newsletter-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.5);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+    .footer {
+        padding: 60px 20px 30px;
+    }
+    
     .footer-content {
         grid-template-columns: 1fr;
+        gap: 25px;
     }
     
     .footer-section {
-        padding: 20px;
+        padding: 25px;
+    }
+    
+    .social-links {
+        justify-content: center;
     }
 }
+
+/* Smooth entrance animation */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.footer-section {
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.footer-section:nth-child(1) { animation-delay: 0.1s; }
+.footer-section:nth-child(2) { animation-delay: 0.2s; }
+.footer-section:nth-child(3) { animation-delay: 0.3s; }
+.footer-section:nth-child(4) { animation-delay: 0.4s; }
 </style>
 </head>
 <body>
@@ -247,21 +469,54 @@
         <div class="footer-section">
             <h3>🍕 PizzaHub</h3>
             <p>Bringing authentic Italian pizza to your doorstep since 2015.</p>
+            
+            <!-- Social Links -->
+            <div class="social-links">
+                <a href="#" class="social-link" title="Facebook">
+                    <i class="fa-brands fa-facebook-f"></i>
+                </a>
+                <a href="#" class="social-link" title="Instagram">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+                <a href="#" class="social-link" title="Twitter">
+                    <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="#" class="social-link" title="YouTube">
+                    <i class="fa-brands fa-youtube"></i>
+                </a>
+            </div>
         </div>
 
         <div class="footer-section">
             <h3>Quick Links</h3>
             <ul class="footer-links">
-                <li><a href="/menu">Menu</a></li>
-                <li><a href="/about">About</a></li>
-                <li><a href="/contact">Contact</a></li>
+                <li><a th:href="@{/menu}">Menu</a></li>
+                <li><a th:href="@{/about}">About</a></li>
+                <li><a th:href="@{/contact}">Contact</a></li>
             </ul>
-        </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h3>Contact Us</h3>
+            <ul class="footer-links">
+                <li><a href="tel:+1234567890">📞 +123 456 7890</a></li>
+                <li><a href="mailto:info@slicehub.com">✉️ info@slicehub.com</a></li>
+                <li><a href="#">📍 123 Pizza Street, NY</a></li>
+            </ul>
+        </div>
+        
+        <div class="footer-section">
+            <h3>Opening Hours</h3>
+            <ul class="footer-links">
+                <li><a href="#">Mon - Fri: 11AM - 11PM</a></li>
+                <li><a href="#">Sat - Sun: 10AM - 12AM</a></li>
+                <li><a href="#">Delivery: Always Open</a></li>
+            </ul>
         </div>
     </div>
 
     <div class="footer-bottom">
-        <p>© 2026 PizzaHub. All rights reserved.</p>
+        <p>© 2026 PizzaHub. All rights reserved. Made with ❤️ by SliceHub Team</p>
     </div>
 </footer>
 

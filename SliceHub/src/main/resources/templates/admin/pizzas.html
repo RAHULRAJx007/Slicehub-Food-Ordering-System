@@ -642,9 +642,10 @@ body {
              th:each="pizza : ${pizzas}">
 
             <div class="pizza-image-container">
-                <img class="pizza-img"
-                     th:src="@{/uploads/{img}(img=${pizza.imageName})}"
-                     alt="Pizza">
+                <img th:if="${pizza.imageName != null}"
+                             th:src="@{'/uploads/' + ${pizza.imageName}}"
+                             class="pizza-img"
+                             th:alt="${pizza.name}" />
 
                 <span class="pizza-status"
                       th:classappend="${pizza.available} ? ' status-available' : ' status-unavailable'"
@@ -664,9 +665,10 @@ body {
 
                 <div class="pizza-actions">
                     <a th:href="@{/admin/pizzas/edit/{id}(id=${pizza.id})}"
-                       class="action-btn btn-edit">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
+   						class="action-btn btn-edit">
+    						<i class="fas fa-edit"></i>
+    						<span>Edit</span>
+					</a>
 
                     <a th:href="@{/admin/pizzas/delete/{id}(id=${pizza.id})}"
                        class="action-btn btn-delete"

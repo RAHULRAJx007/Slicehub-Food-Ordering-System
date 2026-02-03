@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menu | SliceHub</title>
+
+<!-- SAME CSS AS ABOUT -->
+<link rel="stylesheet" th:href="@{/css/common.css}">
+
+<style>
+/* Menu-specific ONLY */
+.menu-section {
+    padding: 100px 30px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.menu-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.menu-header h2 {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--dark);
+}
+
+.menu-header p {
+    font-size: 18px;
+    color: var(--gray);
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.menu-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform .3s;
+}
+
+.menu-card:hover {
+    transform: translateY(-8px);
+}
+
+.menu-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.menu-card-body {
+    padding: 20px;
+}
+
+.menu-card-body h3 {
+    margin: 0 0 10px;
+}
+
+.menu-price {
+    font-weight: 700;
+    color: var(--primary);
+}
+</style>
+</head>
+
+<body>
+
+<!-- HEADER (SAME AS ABOUT) -->
+<div th:replace="~{fragments/header :: siteHeader}"></div>
+
+<!-- OFFSET SAME AS ABOUT -->
+<div style="margin-top: 80px;">
+
+<section class="menu-section">
+
+    <div class="menu-header">
+        <h2>Our Menu</h2>
+        <p>Freshly baked pizzas just for you 🍕</p>
+    </div>
+
+    <div class="menu-grid">
+        <div class="menu-card" th:each="pizza : ${pizzas}">
+            <img th:src="@{'/uploads/' + ${pizza.imageName}}">
+            <div class="menu-card-body">
+                <h3 th:text="${pizza.name}"></h3>
+                <p th:text="${pizza.description}"></p>
+                <p class="menu-price">₹<span th:text="${pizza.price}"></span></p>
+            </div>
+        </div>
+    </div>
+
+</section>
+
+</div>
+
+<!-- FOOTER (SAME AS ABOUT) -->
+<div th:replace="~{fragments/footer :: sitefooter}"></div>
+
+</body>
+</html>

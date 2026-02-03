@@ -36,9 +36,14 @@ public class AuthController {
         return "login";
     }
 
-    @GetMapping("/aboutpage")
+    @GetMapping("/about")
     public String aboutpage() {
         return "about";
+    }
+    
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact";
     }
 
     @PostMapping("/register")
@@ -48,7 +53,7 @@ public class AuthController {
         return "login";
     }
 
-    @GetMapping("/Verify")
+    @GetMapping("/verify")
     public String verifyUser(@RequestParam("token") String token, Model model) {
         try {
             userService.verifyUser(token);

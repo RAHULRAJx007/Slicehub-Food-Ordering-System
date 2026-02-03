@@ -9,7 +9,8 @@ import com.slice.model.User;
 import com.slice.model.VerificationToken;
 
 @Repository
-public interface VerificationTokenRepository  extends JpaRepository<VerificationToken, Long>{
-	Optional<VerificationToken> findByToken(String token);
+public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 
+	Optional<VerificationToken> findByToken(String token);
 }
+

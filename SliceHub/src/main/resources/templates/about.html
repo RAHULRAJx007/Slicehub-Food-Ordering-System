@@ -110,20 +110,7 @@
 <body>
 
 <!-- Header -->
-<nav class="navbar">
-    <div class="nav-container">
-        <a href="index.html" class="logo">🍕 SliceHub</a>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="menu.html">Menu</a></li>
-            <li><a href="about.html">About</a></li>
-            <li><a href="contact.html">Contact</a></li>
-            <li><a href="cart.html" class="cart-btn">🛒 Cart <span class="cart-count">0</span></a></li>
-            <li><a href="login.html" class="login-btn">Login</a></li>
-        </ul>
-        <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
-    </div>
-</nav>
+<div th:replace="~{fragments/header :: siteHeader}"></div>
 
 <!-- ABOUT SECTION -->
 <div style="margin-top: 80px;">
@@ -165,52 +152,7 @@
 </div>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="footer-content">
-        <div class="footer-section">
-            <h3>🍕 SliceHub</h3>
-            <p>Bringing authentic Italian pizza to your doorstep since 2015. Made with love, delivered with care.</p>
-            <div class="social-links">
-                <a href="#" class="social-link">📘</a>
-                <a href="#" class="social-link">📷</a>
-                <a href="#" class="social-link">🐦</a>
-                <a href="#" class="social-link">📺</a>
-            </div>
-        </div>
-        
-        <div class="footer-section">
-            <h3>Quick Links</h3>
-            <ul class="footer-links">
-                <li><a href="menu.html">Menu</a></li>
-                <li><a href="about.html">About Us</a></li>
-                <li><a href="contact.html">Contact</a></li>
-                <li><a href="#">Careers</a></li>
-            </ul>
-        </div>
-        
-        <div class="footer-section">
-            <h3>Support</h3>
-            <ul class="footer-links">
-                <li><a href="#">FAQ</a></li>
-                <li><a href="#">Delivery Info</a></li>
-                <li><a href="#">Terms & Conditions</a></li>
-                <li><a href="#">Privacy Policy</a></li>
-            </ul>
-        </div>
-        
-        <div class="footer-section">
-            <h3>Contact Info</h3>
-            <p>📍 123 Pizza Street, Thiruvananthapuram</p>
-            <p>📞 +91 98765 43210</p>
-            <p>✉️ hello@slicehub.com</p>
-            <p>🕐 Open 10 AM - 9 PM Daily</p>
-        </div>
-    </div>
-    
-    <div class="footer-bottom">
-        <p>© 2026 SliceHub. All rights reserved. Made with ❤️ by Rahul Raj</p>
-    </div>
-</footer>
+<div th:replace="~{fragments/footer :: sitefooter}"></div>
 
 <script>
 function toggleMenu() {

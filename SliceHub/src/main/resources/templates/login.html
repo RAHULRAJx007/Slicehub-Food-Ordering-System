@@ -16,7 +16,6 @@
     --primary-dark: #4f46e5;
     --dark: #1a1a2e;
     --gray: #6c757d;
-    --bg-light: #f8f9ff;
 }
 
 * {
@@ -44,7 +43,7 @@ body {
 
 .login-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
 .login-header h2 {
@@ -57,20 +56,26 @@ body {
     font-size: 14px;
 }
 
-.error-message {
-    background: #ffe5e5;
-    color: #ff4444;
+/* ===== ALERTS ===== */
+.alert {
     padding: 12px;
     border-radius: 10px;
     margin-bottom: 20px;
     font-size: 14px;
-    display: none;
+    text-align: center;
 }
 
-.error-message.show {
-    display: block;
+.alert-success {
+    background: #e6fffa;
+    color: #047857;
 }
 
+.alert-error {
+    background: #ffe5e5;
+    color: #b91c1c;
+}
+
+/* ===== FORM ===== */
 .form-group {
     margin-bottom: 20px;
 }
@@ -89,7 +94,6 @@ body {
     border: 2px solid #e0e0e0;
     font-size: 15px;
     font-family: 'Poppins', sans-serif;
-    transition: border-color 0.3s;
 }
 
 .form-group input:focus {
@@ -97,7 +101,7 @@ body {
     border-color: var(--primary);
 }
 
-/* ===== PASSWORD WRAPPER ===== */
+/* ===== PASSWORD ===== */
 .password-wrapper {
     position: relative;
 }
@@ -116,17 +120,6 @@ body {
     cursor: pointer;
     color: var(--gray);
     font-size: 18px;
-    transition: all 0.3s;
-    padding: 5px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.eye-btn:hover {
-    color: var(--primary);
-    background: rgba(99, 102, 241, 0.08);
 }
 
 .btn-login {
@@ -145,6 +138,7 @@ body {
     background: var(--primary-dark);
 }
 
+/* ===== LINKS ===== */
 .toggle-form {
     text-align: center;
     margin-top: 20px;
@@ -168,9 +162,17 @@ body {
         <p>Login to your SliceHub account</p>
     </div>
 
-    <!-- Login Error -->
-    <div class="error-message" id="errorMessage">
+    <!-- ✅ SUCCESS MESSAGE (after verification) -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+
+    <!-- ❌ INVALID LOGIN -->
+    <div th:if="${param.error}" class="alert alert-error">
         Invalid email or password
+    </div>
+
+    <!-- ❌ NOT VERIFIED -->
+    <div th:if="${param.unverified}" class="alert alert-error">
+        Please verify your email before logging in.
     </div>
 
     <!-- ✅ SPRING SECURITY LOGIN FORM -->
@@ -205,11 +207,6 @@ body {
 </div>
 
 <script>
-const params = new URLSearchParams(window.location.search);
-if (params.get("error")) {
-    document.getElementById("errorMessage").classList.add("show");
-}
-
 function togglePassword() {
     const input = document.getElementById('passwordInput');
     const icon = document.getElementById('eyeIcon');

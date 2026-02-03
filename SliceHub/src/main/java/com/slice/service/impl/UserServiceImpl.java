@@ -58,7 +58,7 @@ public class UserServiceImpl implements UserService{
 		
 		//send email
 		
-		String link = "https://localhost:8080/verify?token=" + token;
+		String link = "http://localhost:8080/verify?token=" + token;
 		emailService.sendVerificationEmail(savedUser.getEmail(), link);
 		
 		return savedUser;

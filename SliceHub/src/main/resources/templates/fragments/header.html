@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
 <style>
 /* ================= ENHANCED HEADER STYLES ================= */
@@ -16,31 +18,59 @@
     border-radius: 25px;
     transition: all 0.3s ease;
     position: relative;
+    overflow: hidden;
+}
+
+.cart-icon::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.2), transparent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.cart-icon:hover::before {
+    width: 200px;
+    height: 200px;
 }
 
 .cart-icon:hover {
-    background: rgba(99, 102, 241, 0.1);
+    background: rgba(99, 102, 241, 0.12);
     border-color: var(--primary);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(99, 102, 241, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
 .cart-svg {
     width: 20px;
     height: 20px;
     stroke: var(--primary);
-    transition: all 0.3s;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    position: relative;
+    z-index: 1;
 }
 
 .cart-icon:hover .cart-svg {
-    transform: scale(1.1);
+    transform: scale(1.15) rotate(-5deg);
     stroke: var(--primary-dark);
+    filter: drop-shadow(0 2px 4px rgba(99, 102, 241, 0.3));
 }
 
 .cart-white {
-    color: var(--dark);
     font-weight: 600;
     font-size: 14px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+}
+
+.cart-icon:hover .cart-white {
+    color: var(--primary-dark);
 }
 
 .cart-badge {
@@ -57,41 +87,97 @@
     justify-content: center;
     font-size: 11px;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.5);
     animation: pulse 2s ease-in-out infinite;
+    z-index: 2;
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 107, 53, 0.5);
+    }
+    50% { 
+        transform: scale(1.15);
+        box-shadow: 0 6px 20px rgba(255, 107, 53, 0.7);
+    }
 }
 
-/* Enhanced Navigation Links */
-.nav-links li a {
+/* NAV LINKS */
+.nav-links {
+    display: flex;
+    list-style: none;
+    gap: 40px;
+    align-items: center;
+}
+
+.nav-links li {
     position: relative;
 }
 
+.nav-links li a {
+    text-decoration: none;
+    color: var(--dark);
+    font-weight: 500;
+    transition: all 0.3s;
+    padding: 8px 0;
+    display: inline-block;
+    position: relative;
+}
+
+/* Double underline effect */
 .nav-links li a::before {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 3px;
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     border-radius: 2px;
-    transition: width 0.3s ease;
+    transition: width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.nav-links li a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 2px;
+    filter: blur(4px);
+    opacity: 0.6;
+    transition: width 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.nav-links li a:hover {
+    color: var(--primary);
+    transform: translateY(-2px);
 }
 
 .nav-links li a:hover::before {
     width: 100%;
 }
 
-/* Enhanced Logo */
+.nav-links li a:hover::after {
+    width: 100%;
+}
+
+/* LOGO */
 .logo {
-    transition: all 0.3s ease;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .logo::after {
@@ -101,39 +187,100 @@
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
     border-radius: 2px;
     opacity: 0;
     transition: opacity 0.3s;
+    filter: blur(1px);
+}
+
+.logo::before {
+    content: '';
+    position: absolute;
+    inset: -5px;
+    background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1), transparent);
+    border-radius: 12px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: -1;
 }
 
 .logo:hover::after {
     opacity: 1;
 }
 
-.logo:hover {
-    transform: scale(1.05);
-    text-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+.logo:hover::before {
+    opacity: 1;
 }
 
-/* Enhanced Navbar with Blur Effect */
+.logo:hover {
+    transform: scale(1.08) rotate(-2deg);
+    text-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    filter: drop-shadow(0 4px 8px rgba(99, 102, 241, 0.2));
+}
+
+/* NAVBAR */
 .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
     background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px) saturate(180%);
     border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    padding: 15px 0;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.navbar::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.3), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .navbar.scrolled {
     background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(25px);
-    box-shadow: 0 4px 30px rgba(99, 102, 241, 0.15);
+    backdrop-filter: blur(25px) saturate(200%);
+    box-shadow: 0 4px 30px rgba(99, 102, 241, 0.2);
+    padding: 10px 0;
 }
 
-/* Mobile Menu Button Enhancement */
+.navbar.scrolled::before {
+    opacity: 1;
+}
+
+.nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* MOBILE */
 .mobile-menu-btn {
-    transition: all 0.3s;
+    display: none;
+    font-size: 26px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     position: relative;
     overflow: hidden;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    color: var(--dark);
 }
 
 .mobile-menu-btn::before {
@@ -144,9 +291,9 @@
     width: 0;
     height: 0;
     border-radius: 50%;
-    background: rgba(99, 102, 241, 0.1);
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(139, 92, 246, 0.15));
     transform: translate(-50%, -50%);
-    transition: width 0.3s, height 0.3s;
+    transition: width 0.4s, height 0.4s;
 }
 
 .mobile-menu-btn:hover::before {
@@ -156,38 +303,172 @@
 
 .mobile-menu-btn:hover {
     color: var(--primary);
-    transform: rotate(90deg);
+    transform: rotate(90deg) scale(1.1);
 }
 
-/* Nav Links Enhancement for Mobile */
+.mobile-menu-btn:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+/* Profile Icon Enhancement */
+.nav-links li a[href*="profile"] {
+    padding: 8px 16px;
+    background: rgba(99, 102, 241, 0.08);
+    border-radius: 20px;
+    transition: all 0.3s;
+}
+
+.nav-links li a[href*="profile"]:hover {
+    background: rgba(99, 102, 241, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Logout Link Enhancement */
+.nav-links li a[href*="logout"] {
+    padding: 8px 16px;
+    background: rgba(239, 68, 68, 0.08);
+    border-radius: 20px;
+    color: #ef4444;
+    transition: all 0.3s;
+}
+
+.nav-links li a[href*="logout"]:hover {
+    background: rgba(239, 68, 68, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Login Link Enhancement */
+.nav-links li a[href*="login"] {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border-radius: 25px;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+.nav-links li a[href*="login"]:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+}
+
+.nav-links li a[href*="login"]::before,
+.nav-links li a[href*="login"]::after {
+    display: none;
+}
+
 @media (max-width: 768px) {
-    .nav-links {
-        background: rgba(255, 255, 255, 0.98);
-        backdrop-filter: blur(20px);
-        border-right: 3px solid var(--primary);
-        box-shadow: 5px 0 30px rgba(99, 102, 241, 0.2);
+    .mobile-menu-btn {
+        display: flex;
     }
+
+    .nav-links {
+        position: fixed;
+        top: 70px;
+        left: -100%;
+        flex-direction: column;
+        background: rgba(255, 255, 255, 0.98);
+        backdrop-filter: blur(20px) saturate(180%);
+        width: 100%;
+        padding: 30px;
+        transition: left 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        box-shadow: 5px 0 30px rgba(99, 102, 241, 0.2);
+        border-right: 3px solid var(--primary);
+        gap: 10px;
+    }
+
+    .nav-links.active {
+        left: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+        opacity: 0;
+        animation: slideInLeft 0.4s forwards;
+    }
+
+    .nav-links.active li:nth-child(1) { animation-delay: 0.1s; }
+    .nav-links.active li:nth-child(2) { animation-delay: 0.2s; }
+    .nav-links.active li:nth-child(3) { animation-delay: 0.3s; }
+    .nav-links.active li:nth-child(4) { animation-delay: 0.4s; }
+    .nav-links.active li:nth-child(5) { animation-delay: 0.5s; }
+    .nav-links.active li:nth-child(6) { animation-delay: 0.6s; }
+    .nav-links.active li:nth-child(7) { animation-delay: 0.7s; }
+
+    @keyframes slideInLeft {
+        from {
+            opacity: 0;
+            transform: translateX(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    }
+
+    .nav-links li a {
+        width: 100%;
+        padding: 15px 20px;
+        display: block;
+        border-radius: 12px;
+        background: rgba(99, 102, 241, 0.02);
+        transition: all 0.3s;
+    }
+
+    .nav-links li a:hover {
+        background: rgba(99, 102, 241, 0.1);
+        transform: translateX(5px);
+        padding-left: 25px;
+    }
+
+    .cart-icon {
+        width: 100%;
+        justify-content: flex-start;
+    }
+}
+
+/* Smooth scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, var(--primary-dark), var(--primary));
 }
 </style>
 </head>
+
 <body>
 
+<!-- ================= HEADER FRAGMENT ================= -->
 <th:block th:fragment="siteHeader">
 
 <nav class="navbar">
     <div class="nav-container">
-        <a href="/" class="logo">🍕 SliceHub</a>
 
+        <!-- LOGO -->
+        <a th:href="@{/}" class="logo">🍕 SliceHub</a>
+
+        <!-- NAV LINKS -->
         <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li><a href="/menu">Menu</a></li>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/menu}">Menu</a></li>
             <li><a th:href="@{/about}">About</a></li>
-            <li><a href="/contact">Contact</a></li>
+            <li><a th:href="@{/contact}">Contact</a></li>
 
-            <!-- SVG Cart -->
+            <!-- CART -->
             <li>
-                <a href="/cart" class="cart-icon">
-                    <svg class="cart-svg" width="20" height="20" viewBox="0 0 24 24"
+                <a th:href="@{/cart}" class="cart-icon">
+                    <svg class="cart-svg" viewBox="0 0 24 24"
                          fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
@@ -195,20 +476,55 @@
                     </svg>
                     <span class="cart-white">Cart</span>
                     <span class="cart-badge"
-                          th:if="${cartCount > 0}"
+                          th:if="${cartCount != null and cartCount > 0}"
                           th:text="${cartCount}">0</span>
                 </a>
             </li>
+
+            <!-- NOT LOGGED IN -->
             <li sec:authorize="isAnonymous()">
-                <a href="/login">Login</a>
+                <a th:href="@{/login}">Login</a>
+            </li>
+
+            <!-- LOGGED IN -->
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/profile}">
+                    👤 Profile
+                </a>
+            </li>
+
+            <li sec:authorize="isAuthenticated()">
+                <a th:href="@{/logout}">Logout</a>
             </li>
         </ul>
 
+        <!-- MOBILE -->
         <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
     </div>
 </nav>
 
 </th:block>
+
+<script>
+function toggleMenu() {
+    const navLinks = document.querySelector('.nav-links');
+    if (navLinks) {
+        navLinks.classList.toggle('active');
+    }
+}
+
+// Navbar scroll effect
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (navbar) {
+        if (window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    }
+});
+</script>
 
 </body>
 </html>
