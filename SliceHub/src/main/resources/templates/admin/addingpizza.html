@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Add Pizza | SliceHub Admin</title>
+<title>Adding Pizza | SliceHub Admin</title>
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -190,6 +190,7 @@ body {
     background: linear-gradient(135deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .header-left p { color: var(--gray); font-size: 14px; }
@@ -392,6 +393,27 @@ body {
     font-weight: 600;
 }
 
+/* Current Image Display */
+.current-image {
+    margin-top: 20px;
+    position: relative;
+}
+
+.current-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.current-image-label {
+    font-size: 13px;
+    color: var(--gray);
+    margin-bottom: 10px;
+    display: block;
+}
+
 /* Image Preview */
 .preview-container {
     margin-top: 20px;
@@ -489,24 +511,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: none;
 }
-
-.preview-img-wrap img.show { display: block; }
-
-.preview-placeholder {
-    text-align: center;
-    color: var(--gray);
-}
-
-.preview-placeholder i {
-    font-size: 50px;
-    opacity: 0.3;
-    margin-bottom: 10px;
-    display: block;
-}
-
-.preview-placeholder span { font-size: 14px; }
 
 .preview-body {
     padding: 25px 30px 30px;
@@ -531,6 +536,7 @@ body {
     background: linear-gradient(135deg, #ff6b35, #f7931e);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .preview-desc {
@@ -671,8 +677,8 @@ body {
     <!-- PAGE HEADER -->
     <div class="page-header">
         <div class="header-left">
-            <h1>Add New Pizza</h1>
-            <p>Fill in the details to add a new pizza to your menu</p>
+            <h1>Edit Pizza</h1>
+            <p>Update pizza details and save changes</p>
         </div>
         <a th:href="@{/admin/pizzas}" class="back-btn">
             <i class="fas fa-arrow-left"></i> Back to Pizzas
@@ -686,11 +692,14 @@ body {
         <div>
             <form th:action="@{/admin/pizzas/save}" th:object="${pizza}" method="post" enctype="multipart/form-data" id="pizzaForm">
 
+                <!-- Hidden ID field -->
+                <input type="hidden" th:field="*{id}" />
+
                 <!-- Basic Info -->
                 <div class="form-card">
                     <div class="form-card-header">
                         <h2><i class="fas fa-info-circle"></i> Basic Info</h2>
-                        <p>Enter pizza name, price and description</p>
+                        <p>Update pizza name, price and description</p>
                     </div>
 
                     <div class="form-group">
@@ -721,17 +730,25 @@ body {
                 <div class="form-card" style="margin-top: 30px;">
                     <div class="form-card-header">
                         <h2><i class="fas fa-image"></i> Pizza Image</h2>
-                        <p>Upload a high-quality image of the pizza</p>
+                        <p>Update the pizza image (optional)</p>
                     </div>
 
-                    <div class="upload-area" id="uploadArea">
-                        <input type="file" name="imageFile" id="imageInput" accept="image/*" onchange="previewImage(event)" />
+                    <!-- Current Image -->
+                    <div class="current-image" th:if="${pizza.imageName != null}">
+                        <span class="current-image-label">Current Image:</span>
+                        <img th:src="@{'/uploads/' + ${pizza.imageName}}" 
+                             th:alt="${pizza.name}"
+                             id="currentImage" />
+                    </div>
+
+                    <div class="upload-area" id="uploadArea" style="margin-top: 20px;">
+                        <input type="file" name="image" id="imageInput" accept="image/*" onchange="previewImage(event)" />
                         <div class="upload-icon">
                             <i class="fas fa-cloud-upload-alt"></i>
                         </div>
-                        <h4>Drag & Drop your image here</h4>
-                        <p>or click to <span class="highlight">browse files</span></p>
-                        <p style="margin-top: 8px; font-size: 12px;">JPG, PNG up to 5MB</p>
+                        <h4>Upload New Image</h4>
+                        <p>Drag & Drop or click to <span class="highlight">browse files</span></p>
+                        <p style="margin-top: 8px; font-size: 12px;">Leave empty to keep current image</p>
                     </div>
 
                     <div class="preview-container" id="previewContainer">
@@ -745,7 +762,7 @@ body {
                 <!-- Actions -->
                 <div class="form-actions">
                     <button type="submit" class="btn-submit">
-                        <i class="fas fa-plus-circle"></i> Add Pizza
+                        <i class="fas fa-save"></i> Save Changes
                     </button>
                     <a th:href="@{/admin/pizzas}" class="btn-cancel">
                         <i class="fas fa-times"></i> Cancel
@@ -763,20 +780,20 @@ body {
                 </div>
 
                 <div class="preview-img-wrap">
-                    <img id="previewCardImg" src="" alt="Pizza Preview" />
-                    <div class="preview-placeholder" id="previewPlaceholder">
-                        <i class="fas fa-image"></i>
-                        <span>Image preview will appear here</span>
-                    </div>
+                    <img id="previewCardImg" 
+                         th:src="${pizza.imageName != null} ? @{'/uploads/' + ${pizza.imageName}} : ''"
+                         th:alt="${pizza.name}" />
                 </div>
 
                 <div class="preview-body">
                     <div class="preview-row">
-                        <div class="preview-name" id="previewName">Pizza Name</div>
-                        <div class="preview-price" id="previewPrice">₹0</div>
+                        <div class="preview-name" id="previewName" th:text="${pizza.name}">Pizza Name</div>
+                        <div class="preview-price" id="previewPrice">₹<span th:text="${pizza.price}">0</span></div>
                     </div>
-                    <div class="preview-desc" id="previewDesc">Your description will appear here...</div>
-                    <span class="preview-status" id="previewStatus">Unavailable</span>
+                    <div class="preview-desc" id="previewDesc" th:text="${pizza.description}">Your description will appear here...</div>
+                    <span class="preview-status" id="previewStatus"
+                          th:classappend="${pizza.available} ? 'available' : ''"
+                          th:text="${pizza.available} ? 'Available' : 'Unavailable'">Unavailable</span>
                 </div>
             </div>
         </div>
@@ -786,6 +803,11 @@ body {
 </main>
 
 <script>
+// Initialize preview on page load
+window.addEventListener('DOMContentLoaded', () => {
+    updatePreview();
+});
+
 // Live preview update
 function updatePreview() {
     const name = document.querySelector('input[name="name"]').value || 'Pizza Name';
@@ -794,7 +816,8 @@ function updatePreview() {
     const available = document.querySelector('select[name="available"]').value;
 
     document.getElementById('previewName').textContent = name;
-    document.getElementById('previewPrice').textContent = '₹' + price;
+    const priceElement = document.getElementById('previewPrice');
+    priceElement.innerHTML = '₹' + price;
     document.getElementById('previewDesc').textContent = desc;
 
     const statusEl = document.getElementById('previewStatus');
@@ -817,11 +840,8 @@ function previewImage(event) {
             document.getElementById('uploadPreview').src = e.target.result;
             document.getElementById('previewContainer').classList.add('show');
 
-            // Show in live preview card
-            const cardImg = document.getElementById('previewCardImg');
-            cardImg.src = e.target.result;
-            cardImg.classList.add('show');
-            document.getElementById('previewPlaceholder').style.display = 'none';
+            // Update live preview card
+            document.getElementById('previewCardImg').src = e.target.result;
         };
         reader.readAsDataURL(file);
     }
@@ -832,10 +852,11 @@ function removePreview() {
     document.getElementById('imageInput').value = '';
     document.getElementById('previewContainer').classList.remove('show');
 
-    const cardImg = document.getElementById('previewCardImg');
-    cardImg.src = '';
-    cardImg.classList.remove('show');
-    document.getElementById('previewPlaceholder').style.display = 'flex';
+    // Restore original image in preview if exists
+    const currentImage = document.getElementById('currentImage');
+    if (currentImage) {
+        document.getElementById('previewCardImg').src = currentImage.src;
+    }
 }
 
 // Drag & drop support

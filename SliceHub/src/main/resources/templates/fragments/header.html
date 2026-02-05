@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-
 <head>
 <style>
-/* ================= FINAL PREMIUM HEADER ================= */
+/* ================= ULTRA PREMIUM HEADER ================= */
 
 :root {
     --primary: #6366f1;
-    --primary-dark: #4f46e5;
     --secondary: #8b5cf6;
-    --accent: #ec4899;
-    --dark: #1a1a2e;
+    --dark: #0f172a;
+    --gray: #64748b;
+    --danger: #ef4444;
 }
 
 /* NAVBAR */
@@ -19,140 +18,170 @@
     position: fixed;
     top: 0;
     width: 100%;
-    background: rgba(255,255,255,0.9);
-    backdrop-filter: blur(25px);
+    height: 72px;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(16px);
     border-bottom: 1px solid rgba(99,102,241,0.15);
-    padding: 16px 0;
     z-index: 1000;
-    transition: all .3s ease;
+    transition: box-shadow .3s ease;
 }
 
 .navbar.scrolled {
-    padding: 10px 0;
-    box-shadow: 0 6px 30px rgba(99,102,241,0.25);
+    box-shadow: 0 12px 40px rgba(15,23,42,0.12);
 }
 
+/* CONTAINER */
 .nav-container {
     max-width: 1200px;
+    height: 100%;
     margin: auto;
-    padding: 0 30px;
+    padding: 0 24px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
 }
 
 /* LOGO */
 .logo {
-    font-size: 30px;
-    font-weight: 800;
-    background: linear-gradient(135deg,var(--primary),var(--secondary),var(--accent));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 26px;
+    font-weight: 900;
     text-decoration: none;
-    transition: transform .3s;
+    color: var(--primary);
 }
 
-.logo:hover { transform: scale(1.08); }
+.logo span {
+    background: linear-gradient(135deg,var(--primary),var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
 /* NAV LINKS */
 .nav-links {
     list-style: none;
     display: flex;
-    gap: 40px;
     align-items: center;
+    gap: 26px;
 }
 
-.nav-links li a {
-    text-decoration: none;
-    color: var(--dark);
+.nav-links a {
     font-weight: 600;
     font-size: 15px;
-    position: relative;
-    transition: all .3s;
+    color: var(--dark);
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 10px;
+    transition: all .25s ease;
 }
 
-.nav-links li a:hover {
+.nav-links a:hover {
     color: var(--primary);
-    transform: translateY(-2px);
+    background: rgba(99,102,241,0.08);
 }
 
-/* CART */
+/* ================= ULTRA PREMIUM CART ================= */
+
 .cart-icon {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 22px;
-    background: rgba(99,102,241,0.08);
-    border-radius: 30px;
-    position: relative;
-    transition: all .3s;
+    gap: 10px;
+    padding: 10px 18px;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#f8fafc,#eef2ff);
+    border: 1px solid rgba(99,102,241,0.2);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.8),
+        0 10px 25px rgba(99,102,241,0.18);
+    transition: all .35s ease;
 }
 
 .cart-icon:hover {
-    background: rgba(99,102,241,0.15);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(99,102,241,0.35);
+    transform: translateY(-2px);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.9),
+        0 18px 40px rgba(99,102,241,0.35);
+    background: linear-gradient(135deg,var(--primary),var(--secondary));
+    color: white;
+}
+
+.cart-icon:hover .cart-svg {
+    stroke: white;
 }
 
 .cart-svg {
     width: 22px;
     height: 22px;
-    stroke: var(--primary) !important;
-    fill: none !important;
-    stroke-width: 2;
+    position:relative;
+    top:12px;
+    stroke: var(--primary);
+    fill: none;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke .3s ease;
 }
 
-.cart-white {
-    font-weight: 700;
-    color: var(--dark);
+.cart-text {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: .3px;
 }
 
-/* CART BADGE */
+/* CART BADGE (LUXURY) */
 .cart-badge {
     position: absolute;
-    top: -8px;
-    right: -8px;
-    width: 22px;
-    height: 22px;
-    background: linear-gradient(135deg,#ff6b35,#f7931e);
-    color: #fff;
-    border-radius: 50%;
+    top: -7px;
+    right: -7px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    background: linear-gradient(135deg,#ff6b35,#f97316);
+    color: white;
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 900;
+    border-radius: 999px;
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow:
+        0 6px 16px rgba(249,115,22,0.55);
+    border: 2px solid white;
 }
 
-/* PROFILE & LOGIN */
-.nav-links a[href*="profile"] {
-    padding: 10px 20px;
-    background: rgba(99,102,241,0.12);
-    border-radius: 25px;
+/* PROFILE */
+.profile-link {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(99,102,241,0.1);
 }
 
-.nav-links a[href*="profile"]:hover {
+.profile-link:hover {
     background: linear-gradient(135deg,var(--primary),var(--secondary));
-    color: #fff;
+    color: white;
 }
 
-.nav-links a[href*="logout"] {
-    padding: 10px 20px;
-    background: rgba(239,68,68,0.15);
-    color: #dc2626;
-    border-radius: 25px;
+/* LOGIN */
+.login-btn {
+    padding: 8px 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg,var(--primary),var(--secondary));
+    color: white !important;
 }
 
-.nav-links a[href*="logout"]:hover {
+/* LOGOUT */
+.logout-btn {
+    padding: 8px 16px;
+    border-radius: 999px;
+    background: rgba(239,68,68,0.12);
+    color: var(--danger);
+}
+
+.logout-btn:hover {
     background: linear-gradient(135deg,#ef4444,#dc2626);
-    color: #fff;
-}
-
-.nav-links a[href*="login"] {
-    padding: 12px 26px;
-    background: linear-gradient(135deg,var(--primary),var(--secondary),var(--accent));
-    color: #fff;
-    border-radius: 30px;
+    color: white;
 }
 
 /* MOBILE */
@@ -161,47 +190,47 @@
     font-size: 26px;
     background: none;
     border: none;
-    cursor: pointer;
     color: var(--primary);
+    cursor: pointer;
 }
 
-@media(max-width:768px){
-    .mobile-menu-btn { display:block; }
+@media (max-width: 768px) {
+    .mobile-menu-btn { display: block; }
 
     .nav-links {
         position: fixed;
         top: 72px;
         left: -100%;
-        flex-direction: column;
         width: 100%;
-        background: #fff;
-        padding: 30px;
-        transition: left .4s ease;
-        box-shadow: 0 10px 40px rgba(99,102,241,0.3);
+        background: white;
+        flex-direction: column;
+        padding: 24px;
+        gap: 14px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+        transition: left .35s ease;
     }
 
     .nav-links.active { left: 0; }
 
-    .nav-links li a {
+    .nav-links a,
+    .cart-icon,
+    .profile-link,
+    .login-btn,
+    .logout-btn {
         width: 100%;
-        padding: 14px 20px;
-        border-radius: 12px;
+        justify-content: center;
     }
-
-    .cart-icon { width: 100%; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- HEADER FRAGMENT -->
 <th:block th:fragment="siteHeader">
-
 <nav class="navbar">
     <div class="nav-container">
 
-        <a th:href="@{/}" class="logo">🍕 SliceHub</a>
+        <a th:href="@{/}" class="logo">🍕 <span>SliceHub</span></a>
 
         <ul class="nav-links">
             <li><a th:href="@{/}">Home</a></li>
@@ -209,39 +238,40 @@
             <li><a th:href="@{/about}">About</a></li>
             <li><a th:href="@{/contact}">Contact</a></li>
 
-            <!-- CART -->
+            <!-- ULTRA PREMIUM CART -->
             <li>
                 <a th:href="@{/cart}" class="cart-icon">
-                    <svg class="cart-svg" viewBox="0 0 24 24">
-                        <circle cx="9" cy="21" r="1"/>
-                        <circle cx="20" cy="21" r="1"/>
-                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
-                    </svg>
-                    <span class="cart-white">Cart</span>
+                   
+                  
+       				<svg class="cart-svg" style="position:relative;top:4px;" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="cart-text">Cart</span>
                     <span class="cart-badge"
                           th:if="${cartCount != null and cartCount > 0}"
                           th:text="${cartCount}">0</span>
                 </a>
             </li>
 
-            <!-- AUTH -->
             <li sec:authorize="isAnonymous()">
-                <a th:href="@{/login}">Login</a>
+                <a th:href="@{/login}" class="login-btn">Login</a>
             </li>
 
             <li sec:authorize="isAuthenticated()">
-                <a th:href="@{customer/account}">👤 Profile</a>
+                <a th:href="@{/customer/account}" class="profile-link">👤 Profile</a>
             </li>
 
             <li sec:authorize="isAuthenticated()">
-                <a th:href="@{/logout}">Logout</a>
+                <a th:href="@{/logout}" class="logout-btn">Logout</a>
             </li>
         </ul>
 
         <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
     </div>
 </nav>
-
 </th:block>
 
 <script>
@@ -251,7 +281,7 @@ function toggleMenu() {
 
 window.addEventListener('scroll', () => {
     document.querySelector('.navbar')
-        ?.classList.toggle('scrolled', window.scrollY > 50);
+        ?.classList.toggle('scrolled', window.scrollY > 20);
 });
 </script>
 
