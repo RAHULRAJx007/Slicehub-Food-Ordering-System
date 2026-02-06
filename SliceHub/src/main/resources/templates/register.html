@@ -1,23 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register | SliceHub</title>
 
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+<style>
 :root {
     --primary: #6366f1;
-    --primary-dark: #4f46e5;
     --secondary: #8b5cf6;
     --dark: #1a1a2e;
-    --light: #ffffff;
     --gray: #6c757d;
-    --bg-light: #f8f9ff;
+    --bg: #f8f9ff;
 }
 
+/* RESET */
 * {
     margin: 0;
     padding: 0;
@@ -26,233 +25,250 @@
 
 body {
     font-family: 'Poppins', sans-serif;
-    background: linear-gradient(135deg, var(--bg-light) 0%, #e8eaf6 100%);
+    background: linear-gradient(135deg, #f8f9ff, #e8eaf6);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    overflow: hidden;
 }
 
+/* ================= FLOATING PIZZAS ================= */
+.pizza-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.pizza {
+    position: absolute;
+    font-size: var(--size);
+    opacity: 0.18;
+    animation: floatUp var(--speed) linear infinite;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+@keyframes floatUp {
+    from {
+        transform: translateY(120vh) rotate(0deg);
+    }
+    to {
+        transform: translateY(-140vh) rotate(360deg);
+    }
+}
+
+/* POP EFFECT */
+.pizza.pop {
+    animation: pop 0.4s ease forwards;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(1);
+        opacity: 0.4;
+    }
+    60% {
+        transform: scale(1.8);
+        opacity: 0.9;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+
+/* ================= REGISTER CARD ================= */
 .register-container {
-    max-width: 450px;
+    position: relative;
+    z-index: 5;
     width: 100%;
+    max-width: 450px;
     background: white;
     padding: 50px;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(99, 102, 241, 0.15);
-    position: relative;
+    border-radius: 22px;
+    box-shadow: 0 30px 80px rgba(99,102,241,0.25);
 }
 
-.home-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 24px;
-    text-decoration: none;
-    background: var(--bg-light);
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.home-btn:hover {
-    background: var(--primary);
-    transform: scale(1.1);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
-}
-
+/* HEADER */
 .register-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 .register-header h2 {
     font-size: 32px;
-    margin-bottom: 10px;
+    font-weight: 700;
     color: var(--dark);
 }
 
 .register-header p {
+    font-size: 14px;
     color: var(--gray);
-    font-size: 15px;
 }
 
+/* FORM */
 .form-group {
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
+label {
+    font-size: 13px;
     font-weight: 600;
     color: var(--dark);
-    font-size: 14px;
+    margin-bottom: 6px;
+    display: block;
 }
 
-.form-group input {
+input {
     width: 100%;
-    padding: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
+    padding: 14px;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
     font-size: 15px;
-    transition: all 0.3s;
+    transition: 0.3s;
 }
 
-.form-group input:focus {
+input:focus {
     outline: none;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.15);
+}
+
+/* BUTTONS */
+.btn {
+    width: 100%;
+    padding: 15px;
+    border-radius: 999px;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .btn-primary {
-    width: 100%;
-    padding: 15px;
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
     color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
 }
 
 .btn-primary:hover {
-    background: var(--primary-dark);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 12px 30px rgba(99,102,241,0.4);
 }
 
-.btn-register {
-    width: 100%;
-    padding: 15px;
-    background: var(--primary);
-    color: white;
-    border: none;
-    border-radius: 30px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s;
+/* GOOGLE BUTTON */
+.google-btn {
+    margin-top: 15px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
 }
 
-.btn-register:hover {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+.google-btn:hover {
+    background: #f9fafb;
 }
 
-.password-strength {
-    margin-top: 10px;
-    height: 4px;
-    background: #e0e0e0;
-    border-radius: 2px;
-    overflow: hidden;
+.google-btn img {
+    width: 18px;
 }
 
-.password-strength-bar {
-    height: 100%;
-    width: 0%;
-    transition: all 0.3s ease;
-    border-radius: 2px;
-}
-
-.toggle-form {
+/* FOOTER */
+.footer-text {
     text-align: center;
     margin-top: 25px;
-}
-
-.toggle-form p {
-    color: var(--gray);
     font-size: 14px;
 }
 
-.toggle-form a {
+.footer-text a {
     color: var(--primary);
-    text-decoration: none;
     font-weight: 600;
-}
-
-.toggle-form a:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 768px) {
-    .register-container {
-        padding: 40px 30px;
-    }
+    text-decoration: none;
 }
 </style>
 </head>
 
 <body>
 
+<!-- FLOATING PIZZAS -->
+<div class="pizza-bg" id="pizzaBg"></div>
+
+<!-- REGISTER CARD -->
 <div class="register-container">
-    <a th:href="@{/}" class="home-btn" title="Back to Home">🏠</a>
-    
     <div class="register-header">
         <h2>Create Account</h2>
-        <p>Join SliceHub today!</p>
+        <p>Join SliceHub & order delicious pizzas 🍕</p>
     </div>
-    
+
     <form th:action="@{/register}" th:object="${user}" method="post">
         <div class="form-group">
-            <label for="name">Full Name</label>
-            <input type="text" id="name" th:field="*{name}" placeholder="Enter your full name" required />
+            <label>Full Name</label>
+            <input type="text" th:field="*{name}" required>
         </div>
+
         <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" th:field="*{email}" placeholder="Enter your email" required />
+            <label>Email</label>
+            <input type="email" th:field="*{email}" required>
         </div>
+
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" th:field="*{password}" placeholder="Create a strong password" required />
-            <div class="password-strength">
-                <div class="password-strength-bar" id="strengthBar"></div>
-            </div>
+            <label>Password</label>
+            <input type="password" th:field="*{password}" required>
         </div>
-        <button type="submit" class="btn-register">Create Account</button>
+
+        <button class="btn btn-primary">Create Account</button>
     </form>
-    
-    <div class="toggle-form">
-        <p>Already have an account? <a th:href="@{/loginpage}">Login here</a></p>
+
+    <!-- GOOGLE LOGIN -->
+    <button class="btn google-btn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg">
+        Continue with Google
+    </button>
+
+    <div class="footer-text">
+        Already have an account?
+        <a th:href="@{/login}">Login</a>
     </div>
 </div>
 
+<!-- ================= JS ================= -->
 <script>
-// Password strength checker
-document.getElementById('password').addEventListener('input', function(e) {
-    const password = e.target.value;
-    const strengthBar = document.getElementById('strengthBar');
-    
-    let strength = 0;
-    
-    // Check password criteria
-    if (password.length >= 8) strength += 25;
-    if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength += 25;
-    if (password.match(/[0-9]/)) strength += 25;
-    if (password.match(/[^a-zA-Z0-9]/)) strength += 25;
-    
-    strengthBar.style.width = strength + '%';
-    
-    // Set color based on strength
-    if (strength <= 25) {
-        strengthBar.style.backgroundColor = '#ff4444';
-    } else if (strength <= 50) {
-        strengthBar.style.backgroundColor = '#ffaa00';
-    } else if (strength <= 75) {
-        strengthBar.style.backgroundColor = '#66bb6a';
-    } else {
-        strengthBar.style.backgroundColor = '#00cc66';
-    }
-});
+const pizzaBg = document.getElementById('pizzaBg');
+const PIZZA_COUNT = 24;
+
+function spawnPizza() {
+    const pizza = document.createElement('div');
+    pizza.className = 'pizza';
+    pizza.textContent = '🍕';
+
+    const size = Math.floor(Math.random() * 40) + 30;
+    const speed = Math.floor(Math.random() * 20) + 15;
+    const left = Math.random() * 100;
+
+    pizza.style.setProperty('--size', size + 'px');
+    pizza.style.setProperty('--speed', speed + 's');
+    pizza.style.left = left + '%';
+    pizza.style.top = '120vh';
+
+    pizza.addEventListener('click', () => {
+        pizza.classList.add('pop');
+        setTimeout(() => {
+            pizza.remove();
+            spawnPizza();
+        }, 400);
+    });
+
+    pizzaBg.appendChild(pizza);
+}
+
+for (let i = 0; i < PIZZA_COUNT; i++) {
+    setTimeout(spawnPizza, i * 300);
+}
 </script>
 
 </body>

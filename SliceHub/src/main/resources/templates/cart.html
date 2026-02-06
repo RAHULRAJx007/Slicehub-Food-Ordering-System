@@ -720,11 +720,7 @@ body {
 
         <!-- CART ITEMS SECTION -->
         <div class="cart-items-section">
-            <h2 class="section-title">
-                <i class="fas fa-shopping-basket"></i>
-                <span>Cart Items</span>
-                <span class="item-count" th:text="${cartItems.size()} + ' items'">0 items</span>
-            </h2>
+
 
             <!-- CART ITEM -->
             <div class="cart-item" th:each="item : ${cartItems}">
@@ -750,9 +746,7 @@ body {
 
                 <!-- Item Actions -->
                 <div class="cart-item-actions">
-                    <div class="item-total-price">
-                        ₹<span th:text="${#numbers.formatDecimal(item.totalPrice, 1, 2)}">0.00</span>
-                    </div>
+                    
 
                     <!-- Quantity Controls -->
                     <div class="quantity-controls">
@@ -792,17 +786,17 @@ body {
             <!-- Summary Rows -->
             <div class="summary-row">
                 <span class="summary-label">Subtotal</span>
-                <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(cartTotal, 1, 2)}">0.00</span></span>
+                <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(subtotal, 1, 2)}">0.00</span></span>
             </div>
 
             <div class="summary-row">
                 <span class="summary-label">Delivery Fee</span>
-                <span class="summary-value">₹40.00</span>
+                <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(deliveryFee, 1, 2)}">0.00</span></span>
             </div>
 
             <div class="summary-row">
                 <span class="summary-label">Tax (5%)</span>
-                <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(cartTotal * 0.05, 1, 2)}">0.00</span></span>
+                <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(tax, 1, 2)}">0.00</span></span>
             </div>
 
             <!-- Promo Code Section -->
@@ -830,7 +824,7 @@ body {
             <div class="summary-total">
                 <div class="total-row">
                     <span class="total-label">Total Amount</span>
-                    <span class="total-value">₹<span th:text="${#numbers.formatDecimal(cartTotal + 40 + (cartTotal * 0.05), 1, 2)}">0.00</span></span>
+                <span class="summary-value">₹<span th:text="${#numbers.formatDecimal(grandTotal, 1, 2)}">0.00</span></span>
                 </div>
             </div>
 
@@ -922,45 +916,9 @@ function showToast(message, type = 'success') {
     }, 3000);
 }
 
-// ================= MOBILE MENU =================
 
-function toggleMenu() {
-    const navLinks = document.querySelector('.nav-links');
-    if (navLinks) {
-        navLinks.classList.toggle('active');
-    }
-}
 
-// ================= NAVBAR SCROLL =================
 
-window.addEventListener('scroll', () => {
-    const navbar = document.querySelector('.navbar');
-    if (navbar) {
-        if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
-        } else {
-            navbar.classList.remove('scrolled');
-        }
-    }
-});
-
-// ================= URL PARAMS CHECK =================
-
-document.addEventListener('DOMContentLoaded', () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const success = urlParams.get('success');
-    const error = urlParams.get('error');
-    
-    if (success) {
-        showToast(decodeURIComponent(success), 'success');
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-    
-    if (error) {
-        showToast(decodeURIComponent(error), 'error');
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-});
 </script>
 
 </body>

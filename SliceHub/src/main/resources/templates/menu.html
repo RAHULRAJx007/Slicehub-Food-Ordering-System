@@ -193,21 +193,19 @@
                 </div>
 
                 <div class="action-row" th:if="${pizza.available}">
-                    <button class="btn btn-cart"
+                    <a th:href="@{/cart/add/{id}(id=${pizza.id})}" class="btn btn-cart"
                             th:data-id="${pizza.id}"
                             th:data-name="${pizza.name}"
-                            th:data-price="${pizza.price}"
-                            onclick="addToCart(this)">
+                            th:data-price="${pizza.price}">
                         <i class="fas fa-shopping-cart"></i> Add to Cart
-                    </button>
+                    </a>
 
-                    <button class="btn btn-buy"
+                   <!--  <button class="btn btn-buy"
                             th:data-id="${pizza.id}"
                             th:data-name="${pizza.name}"
-                            th:data-price="${pizza.price}"
-                            onclick="buyNow(this)">
+                            th:data-price="${pizza.price}">
                         <i class="fas fa-bolt"></i> Buy Now
-                    </button>
+                    </button> -->
                 </div>
 
                 <div class="action-row" th:unless="${pizza.available}">
@@ -231,33 +229,7 @@
 </div>
 
 <script>
-function getCart() {
-    return JSON.parse(localStorage.getItem("cart") || "[]");
-}
 
-function saveCart(cart) {
-    localStorage.setItem("cart", JSON.stringify(cart));
-}
-
-function addToCart(btn) {
-    const id = Number(btn.dataset.id);
-    const name = btn.dataset.name;
-    const price = Number(btn.dataset.price);
-
-    const cart = getCart();
-    const item = cart.find(i => i.id === id);
-
-    if (item) item.qty++;
-    else cart.push({ id, name, price, qty: 1 });
-
-    saveCart(cart);
-    showToast(name + " added to cart");
-}
-
-function buyNow(btn) {
-    addToCart(btn);
-    window.location.href = "/cart";
-}
 
 function showToast(msg) {
     const toast = document.getElementById("toast");

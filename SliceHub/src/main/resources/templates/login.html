@@ -150,6 +150,60 @@ body {
     font-weight: 600;
     text-decoration: none;
 }
+
+/* ===== GOOGLE LOGIN ===== */
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+    color: var(--gray);
+    font-size: 13px;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.divider::before {
+    margin-right: 10px;
+}
+
+.divider::after {
+    margin-left: 10px;
+}
+
+.btn-google {
+    width: 100%;
+    padding: 14px;
+    background: white;
+    color: #333;
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-google:hover {
+    border-color: #4285F4;
+    background: #f8f9fa;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.15);
+}
+
+.btn-google img {
+    width: 20px;
+    height: 20px;
+}
 </style>
 </head>
 
@@ -197,6 +251,14 @@ body {
 
         <button type="submit" class="btn-login">Login</button>
     </form>
+
+    <!-- GOOGLE LOGIN -->
+    <div class="divider">or continue with</div>
+    
+    <a th:href="@{/oauth2/authorization/google}" class="btn-google">
+        <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google">
+        Sign in with Google
+    </a>
 
     <div class="toggle-form">
         <p>Don't have an account?
