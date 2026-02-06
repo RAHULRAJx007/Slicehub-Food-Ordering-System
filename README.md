@@ -5,9 +5,6 @@ It simulates a modern food delivery platform with secure authentication, email v
 
 The project showcases clean enterprise-level backend architecture using the Spring ecosystem.
 
-![SliceHub Hero](https://via.placeholder.com/1200x400/6366f1/ffffff?text=SliceHub+-+Fresh+Pizza+Delivered)  
-*(Replace with actual screenshot of home/menu page)*
-
 ## ✨ Features
 
 ### 👤 Authentication & Security
